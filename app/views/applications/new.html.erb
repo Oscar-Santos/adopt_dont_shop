@@ -1,5 +1,21 @@
-<%= form_with url: "/pets", method: :get, local: true do |f| %>
-  <%= f.label :search %>
-  <%= f.text_field :search %>
-  <%= f.submit "Search" %>
+<center><h1> New Application </h1></center>
+<center><h3> Fill out with your personal information </h3></center>
+<p><%= form_with url: "/applications", method: :post, local: true do |f| %></p>
+
+
+
+    <p><%= f.label :name %></p>
+  <p><%= f.text_field :name %></p>
+  <p><%= f.label :street_address %></p>
+  <p><%= f.text_field :street_address %></p>
+  <p><%= f.label :city %></p>
+  <p><%= f.text_field :city %></p>
+  <p><%= f.label :state %></p>
+  <p><%= f.text_field :state %></p>
+  <p><%= f.label :zip_code %></p>
+  <p><%= f.text_field :zip_code %></p>
+  <p><%= f.label :description %></p>
+  <p><%= f.text_field :description %></p>
+  <p><%= f.submit "Submit" %></p>
+
 <% end %>

@@ -17,28 +17,7 @@ RSpec.describe 'the pets index' do
     expect(page).to have_content(pet_2.breed)
     expect(page).to have_content(pet_2.age)
     expect(page).to have_content(shelter.name)
-  end
 
-  it 'only lists adoptable pets' do
-    shelter = Shelter.create(name: 'Aurora shelter', city: 'Aurora, CO', foster_program: false, rank: 9)
-    pet_1 = Pet.create(adoptable: true, age: 1, breed: 'sphynx', name: 'Lucille Bald', shelter_id: shelter.id)
-    pet_2 = Pet.create(adoptable: true, age: 3, breed: 'doberman', name: 'Lobster', shelter_id: shelter.id)
-    pet_3 = Pet.create(adoptable: false, age: 2, breed: 'saint bernard', name: 'Beethoven', shelter_id: shelter.id)
-
-    visit "/pets"
-
-    expect(page).to_not have_content(pet_3.name)
-  end
-
-  it 'displays a link to edit each pet' do
-    shelter = Shelter.create(name: 'Aurora shelter', city: 'Aurora, CO', foster_program: false, rank: 9)
-    pet_1 = Pet.create(adoptable: true, age: 1, breed: 'sphynx', name: 'Lucille Bald', shelter_id: shelter.id)
-    pet_2 = Pet.create(adoptable: true, age: 3, breed: 'doberman', name: 'Lobster', shelter_id: shelter.id)
-
-    visit '/pets'
-
-    expect(page).to have_content("Edit #{pet_1.name}")
-    expect(page).to have_content("Edit #{pet_2.name}")
 
     click_link("Edit #{pet_1.name}")
 
@@ -108,13 +87,36 @@ RSpec.describe 'the pets index' do
     expect(page).to have_link('Start an Application')
     click_on('Start an Application')
     expect(current_path).to eq('/applications/new')
-    expect(page).to have_field('application_name')
-    expect(page).to have_field('application_street_address')
-    expect(page).to have_field('application_city')
-    expect(page).to have_field('application_state')
-    expect(page).to have_field('application_zip_code')
-
-    
-
+    expect(page).to have_field('name')
+    expect(page).to have_field('street_address')
+    expect(page).to have_field('city')
+    expect(page).to have_field('state')
+    expect(page).to have_field('zip_code')
+    expect(page).to have_field('description')
   end
+
+    it 'wip 3.2' do
+      # shelter = Shelter.create(name: 'Aurora shelter', city: 'Aurora, CO', foster_program: false, rank: 9)
+      # pet_1 = Pet.create(adoptable: true, age: 7, breed: 'sphynx', name: 'Bare-y Manilow', shelter_id: shelter.id)
+      visit '/applications/new'
+
+      fill_in('name', with: 'Jose Garcia')
+      fill_in('street_address', with: '200 main st')
+      fill_in('city', with: 'Denver')
+      fill_in('state', with: 'CO')
+      fill_in('zip_code', with: '80202')
+      fill_in('description', with: 'I am a good guy')
+      click_button('Submit')
+      application_1 = Application.last
+
+      expect(current_path).to eq("/applications/#{application_1.id}")
+      # expect(current_path).to eq("/applications/#{Application.last.id}")
+      expect(page).to have_content('Jose Garcia')
+      expect(page).to have_content('200 main st')
+      expect(page).to have_content('Denver')
+      expect(page).to have_content('CO')
+      expect(page).to have_content('80202')
+      expect(page).to have_content('I am a good guy')
+      expect(application_1.status).to eq('In Progress')
+    end
 end
